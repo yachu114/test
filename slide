@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <style>
+        .wrapper{
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .d-flex{
+            display: flex;
+        }
+        .position-absolute{
+            position: absolute;
+        }
+        .transition{
+            transition: .5s;
+        }
+        .slider{
+            height: 400px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+        .slider_wrap{
+            height: 400px;
+            /* width: 3200px; */
+            /* 可以直接拿掉width 因為是用flex 並且當初寬度已經下在li 所以會自動撐開 */
+            
+            display: flex;
+            /* left: -800px; */
+            transition: .5s;
+            left:0;
+        }
+        .slider_wrap li{
+            height: 400px;
+            width:800px;
+        }
+        .slider_wrap li img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pages{
+            left:0;
+            bottom: 0px;
+            width:100%;
+            display: flex;
+            justify-content: center;
+        }
+        .pages li{
+            border: 1px solid #fff;
+            height: 12px;
+            margin: 0 5px;
+            width: 36px;
+        }
+        .pages li:hover{
+            background: #fff;
+        }
+        .d_arrow{
+            top:0;
+            bottom:0;
+            width: 48px;
+            background: rgba(0,0,0,0);
+            justify-content: center;
+            align-items:center;
+            color:#fff;
+            z-index: 99;
+            font-size: 36px;
+            cursor: pointer;
+        }
+        .d_arrow:hover{
+            background: rgba(0,0,0,.7);
+        }
+        .d_arrow .fas{
+            opacity: .5;
+        }
+        .d_arrow:hover .fas{
+            opacity: .8;
+        }
+        .arrow_r{
+            right:0;
+        }
+    </style>
+</head>
+  <body>
+      <div class="wrapper">
+        <div class="slider">
+            <a id="goPrev" class="d-flex position-absolute d_arrow arrow_l transition"><i class="fas fa-angle-left text-white transition"></i></a>
+            <a id="goNext" class="d-flex position-absolute d_arrow arrow_r transition"><i class="fas fa-angle-right text-white transition"></i></a>
+            <ul class="list-unstyled slider_wrap position-absolute" id="sliderWrap">
+                <!-- <li><img src="images/slide1.jpeg" alt=""></li>
+                <li><img src="images/slide2.jpeg" alt=""></li>
+                <li><img src="images/slide3.jpeg" alt=""></li>
+                <li><img src="images/slide4.jpeg" alt=""></li> -->
+            </ul>
+            <ul class="list-unstyled pages position-absolute" id="pages">
+                <!-- <li></li>
+                <li></li>
+                <li></li>
+                <li></li> -->
+            </ul>
+        </div>
+      </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <script>
+        var slideNo=0;
+        var slideWidth=800;
+
+        var slideArray=["slide1.jpeg", "slide2.jpeg", "slide3.jpeg", "slide4.jpeg", "earth.jpg"];
+        var slideCount=slideArray.length;
+
+        // 如果當初是用float寫就得從這邊去改變照片容器大小
+        $("#sliderWrap").css("width", slideWidth-slideCount);
+        
+        for($i=0; $i<slideCount; $i++){
+            $("#sliderWrap").append(`<li><img src="images/${slideArray[$i]}" alt=""></li>`);
+            $("#pages").append(`<li></li>`);
+        }
+
+
+        // var slideCount=$("#sliderWrap li").length;
+        console.log(slideCount);
+        // $(".pages li:eq(0)").css("background", "#fff");
+        function goToSlide(){
+            $(".pages li").eq(slideNo).css("background", "#fff")
+                .siblings().css("background", "transparent")
+            $("#sliderWrap").css("left", (0 - slideNo*slideWidth) );
+        }
+        $("#goNext").click(function(){
+            slideNo=slideNo+1;
+            // if(slideNo>=4){
+            //     slideNo=0;
+            // }
+            if(slideNo>=slideCount)slideNo=0;
+            // console.log(slideNo);
+            goToSlide();
+        });
+        $("#goPrev").click(function(){
+            slideNo=slideNo-1;
+            if(slideNo<0)slideNo=slideCount-1;
+            // console.log(slideNo);
+            goToSlide();
+        });
+
+        $(".pages li").eq(0).css("background", "#fff");
+        $(".pages li").hover(function(){
+            var slideMove="";
+            slideNo=$(this).index();
+            // console.log(slideNo);
+            goToSlide();
+            // $(this).css("background", "#fff")
+            //     .siblings().css("background", "transparent")
+            // $("#sliderWrap").css("left", (0 - slideNo*slideWidth) );
+            // $("#sliderWrap").css("left", (0 - $(this).index()*800) );
+        });
+    </script>
+</body>
+</html>
